@@ -2180,6 +2180,14 @@ public abstract class AbstractClothing extends AbstractCoreItem implements XMLSa
 		return new Value<>(false, "This item of clothing cannot be equipped during sex!");
 	}
 	
+	/**
+	 * Same as above, but checks for a special kind of clothing enchantment that can only be used by outlaw NPCs.
+	 * @return
+	 */
+	public boolean isContrabandEnslavementClothing() {
+		return this.getEffects().stream().anyMatch(e -> e.getPrimaryModifier() == TFModifier.CLOTHING_ENSLAVEMENT_CONTRABAND);
+	}
+	
 	@Override
 	public List<ItemEffect> getEffects() {
 		return effects;

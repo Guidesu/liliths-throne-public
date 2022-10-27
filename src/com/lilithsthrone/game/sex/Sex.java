@@ -15,6 +15,7 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import com.lilithsthrone.controller.MainController;
 import com.lilithsthrone.game.PropertyValue;
 import com.lilithsthrone.game.character.FluidStored;
 import com.lilithsthrone.game.character.GameCharacter;
@@ -48,6 +49,7 @@ import com.lilithsthrone.game.dialogue.companions.CompanionManagement;
 import com.lilithsthrone.game.dialogue.responses.Response;
 import com.lilithsthrone.game.dialogue.utils.ParserTag;
 import com.lilithsthrone.game.dialogue.utils.UtilText;
+import com.lilithsthrone.game.dialogue.responses.ResponseEffectsOnly;
 import com.lilithsthrone.game.inventory.InventorySlot;
 import com.lilithsthrone.game.inventory.ItemTag;
 import com.lilithsthrone.game.inventory.clothing.AbstractClothing;
@@ -1588,6 +1590,9 @@ public class Sex {
 			} else if(index==4) {
 				return "Repeat Actions";
 				
+			} else if(index==5 && Main.game.isDebugMode()) {
+				return "Debug Actions";
+				
 			} else {
 				return null;
 			}
@@ -1738,6 +1743,23 @@ public class Sex {
 						}
 					}
 					
+				} else if(responseTab==5 && Main.game.isDebugMode()) {
+					if(index == 1) {
+						return new ResponseEffectsOnly("Insta-cum", "Sets arousal of all parties to max") {
+							@Override
+							public void effects()
+							{
+								for(GameCharacter sexParticipant : allParticipants)
+								{
+									sexParticipant.setArousal(100);
+								}
+								Main.game.setResponseTab(0);
+								Sex.endSexTurn(SexActionUtility.PLAYER_NONE);
+								MainController.updateUI();
+								Main.game.updateResponses();
+							};
+						};
+					}
 				}
 				
 				return null;
